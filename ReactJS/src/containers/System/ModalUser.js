@@ -9,7 +9,7 @@ class ModalUser extends Component {
         super(props);
         this.state = {
             email: "",
-            passWord: "",
+            password: "",
             firstName: "",
             lastName: "",
             address: "",
@@ -25,7 +25,7 @@ class ModalUser extends Component {
     }
     checkValidateDataInput = () => {
         let isValid = true;
-        let arrInput = ['email', 'passWord', 'firstName', 'lastName', 'address', 'phoneNumber', 'gender', 'roleId']
+        let arrInput = ['email', 'password', 'firstName', 'lastName', 'address', 'phoneNumber', 'gender', 'roleId']
         for (let i = 0; i < arrInput.length; i++) {
             if (!this.state[arrInput[i]]) {
                 isValid = false;
@@ -45,8 +45,7 @@ class ModalUser extends Component {
     handleAddNewUser = () => {
         let isValid = this.checkValidateDataInput();
         if (isValid === true) {
-
-            this.props.createNewUser();
+            this.props.createNewUser(this.state);
         }
     }
     render() {
@@ -75,12 +74,12 @@ class ModalUser extends Component {
                             />
                         </div>
                         <div className="form-group col-md-6">
-                            <label htmlFor="inputPassword4">Password</label>
+                            <label htmlFor="inputpassword4">password</label>
                             <input type="password" className="form-control"
-                                id="inputPassword4" name="passWord"
-                                placeholder="Password........"
-                                onChange={(e) => { this.handleOnchangeInput(e, "passWord") }}
-                                value={this.state.passWord}
+                                id="inputpassword4" name="password"
+                                placeholder="password........"
+                                onChange={(e) => { this.handleOnchangeInput(e, "password") }}
+                                value={this.state.password}
                             />
                         </div>
                     </div>

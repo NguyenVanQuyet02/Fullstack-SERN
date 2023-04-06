@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import './UserManage.scss';
-import { getUserApi } from '../../services/userService'
+import {
+    getUserApi, createNewUserService,
+    deleteUserService
+} from '../../services/userService'
 import { Fragment } from 'react';
 import ModalUser from './ModalUser';
 
@@ -15,6 +18,9 @@ class UserManage extends Component {
         }
     }
     async componentDidMount() {
+        await this.getAllUserFromReact();
+    }
+    getAllUserFromReact = async () => {
         let response = await getUserApi('ALL');
         if (response && response.errCode === 0) {
             this.setState({
@@ -22,7 +28,6 @@ class UserManage extends Component {
             })
         }
     }
-
     handleAddNewUser = () => {
         this.setState({
             isOpenModalUser: true,
@@ -33,8 +38,38 @@ class UserManage extends Component {
             isOpenModalUser: !this.state.isOpenModalUser,
         })
     }
-    createNewUser = () => {
-        alert('call me!!');
+    createNewUser = async (data) => {
+        try {
+            let response = await createNewUserService(data);
+            if (response && response.errCode !== 0) {
+                alert(response.message)
+            }
+            else {
+                await this.getAllUserFromReact();
+                this.setState({
+                    isOpenModalUser: false,
+                })
+            }
+        } catch (error) {
+            console.log('ERROR: ', error);
+        }
+    }
+    handleDeleteUser = async (user) => {
+        try {
+
+            let response = await deleteUserService(user.id);
+            if (response && response.errCode === 0) {
+                await this.getAllUserFromReact();
+            } else {
+                alert(response.message);
+            }
+        } catch (error) {
+            console.log("ERROR: ", error);
+        }
+    }
+    handleEditUser = () => {
+        alert('edit user successful!')
+
     }
     render() {
         let arrUsers = this.state.arrUsers;
@@ -81,8 +116,8 @@ class UserManage extends Component {
                                             <td key={user.phoneNumber}>{user.phoneNumber}</td>
                                             <td key={user.gender ? 'Male' : 'Female'}>{user.gender ? 'Male' : 'Female'}</td>
                                             <td>
-                                                <button className='btn-edit'><i className="fas fa-pencil-alt"></i></button>
-                                                <button className='btn-delete'><i className="fas fa-trash"></i></button>
+                                                <button className='btn-edit' onClick={() => this.handleEditUser()}><i className="fas fa-pencil-alt"></i></button>
+                                                <button className='btn-delete' onClick={() => this.handleDeleteUser(user)}><i className="fas fa-trash"></i></button>
                                             </td>
                                         </tr>
                                     )

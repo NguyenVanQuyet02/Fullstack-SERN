@@ -8,4 +8,18 @@ const handleLoginApi = (userEmail, userPassword) => {
 const getUserApi = (idData) => {
     return axios.get(`/api/get-all-user?id=${idData}`);
 }
-export { handleLoginApi, getUserApi };
+const createNewUserService = (data) => {
+    console.log('data: ', data);
+    return axios.post('/api/create-new-user', data);
+}
+const deleteUserService = (userId) => {
+    return axios.delete('/api/delete-user', {
+        data: {
+            id: userId
+        }
+    });
+}
+export {
+    handleLoginApi, getUserApi,
+    createNewUserService, deleteUserService
+};

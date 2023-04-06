@@ -96,28 +96,29 @@ let createNewUserAPI = async (data) => {
     return new Promise(async (resolve, reject) => {
         try {
             let checkEmail = await checkUserEmail(data.email);
-            if (checkEmail) {
+            if (checkEmail === true) {
                 resolve({
                     errCode: 1,
                     message: 'This email already in use, plz try again!!!'
                 })
             }
-
-            let hashPassword = await hashUserPassword(data.password);
-            await db.User.create({
-                email: data.email,
-                password: hashPassword,
-                firstName: data.firstName,
-                lastName: data.lastName,
-                address: data.address,
-                phoneNumber: data.phoneNumber,
-                gender: data.gender,
-                roleId: data.roleId
-            })
-            resolve({
-                errCode: 0,
-                message: 'create new user successful'
-            });
+            else {
+                let hashPassword = await hashUserPassword(data.password);
+                await db.User.create({
+                    email: data.email,
+                    password: hashPassword,
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    address: data.address,
+                    phoneNumber: data.phoneNumber,
+                    gender: data.gender,
+                    roleId: data.roleId
+                })
+                resolve({
+                    errCode: 0,
+                    message: 'create new user successful'
+                });
+            }
         } catch (error) {
             reject(error);
         }
